@@ -398,3 +398,22 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# vscode
+.vscode/
+
+# build
+build/
+Debug/
+Release/
+x64/
+x86/
+RelWithDebInfo/
+
+# cmake
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+Testing/
+dbimg.dir
+

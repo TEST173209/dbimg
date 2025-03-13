@@ -1,7 +1,8 @@
 ﻿#include <iostream>
-#include <argparse/argparse.hpp>
+
 #include <opencv2/opencv.hpp>
 
+#include "argparse/argparse.hpp"
 #include "img.hpp"
 
 #define PROGRAM "DBIMG"
@@ -44,11 +45,12 @@ int main(int argc, char* argv[])
         .implicit_value(true);
 
     // 高级参数
-	program.add_argument("-r", "--ratio")
-		.help("compress ratio (0.0 - 1.0), default 0.5")
-		.default_value(0.5f)
+    program.add_argument("-r", "--ratio")
+        .help("compress ratio (0.0 - 1.0), default 0.5")
+        .default_value(0.5)
         .implicit_value(true)
-		.action([](const std::string& value) { return std::stof(value); });
+        .nargs(1)
+        .scan<'g', float>();
     program.add_argument("-m", "--multicolor")
 		.help("make colorful phantom tank")
 		.default_value(false)
@@ -68,7 +70,7 @@ int main(int argc, char* argv[])
     std::string back_img_path = program.get<std::string>("--back");
     bool compress = program["--compress"] == true;
     bool unpack = program["--unpack"] == true;
-	float ratio = program.get<float>("--ratio");
+    float ratio = program.get<float>("--ratio");
 	bool multicolor = program["--multicolor"] == true;
 
     if (!unpack) {

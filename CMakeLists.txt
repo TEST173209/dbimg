@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # 查找OpenCV4依find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs highgui)
 
 add_executable(dbimg
+    argparse/argparse.hpp
     main.cpp
     img.cpp
     img.hpp

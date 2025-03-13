@@ -28,25 +28,23 @@ cv::Mat make_phantom_tank(cv::Mat& front, cv::Mat& back, const bool colorful)
 		constexpr float brightness_b = 7.0f;
 		for (int i = 0; i < front.rows; ++i) {
 			for (int j = 0; j < front.cols; ++j) {
-				// 获取前景背景像素（OpenCV为BGR格式）
 				cv::Vec3b f_pixel = front.at<cv::Vec3b>(i, j);
 				cv::Vec3b b_pixel = back.at<cv::Vec3b>(i, j);
 
-				// 应用亮度调整（交换B和R通道）
-				float R_f = f_pixel[2] * brightness_f / 10.0f;
-				float G_f = f_pixel[1] * brightness_f / 10.0f;
-				float B_f = f_pixel[0] * brightness_f / 10.0f;
+				// fix H
+				float R_f = f_pixel[2];//* brightness_f / 10.0f;
+				float G_f = f_pixel[1];//* brightness_f / 10.0f;
+				float B_f = f_pixel[0];//* brightness_f / 10.0f;
+									  ;//
+				float R_b = b_pixel[2];//* brightness_b / 10.0f;
+				float G_b = b_pixel[1];//* brightness_b / 10.0f;
+				float B_b = b_pixel[0];//* brightness_b / 10.0f;
 
-				float R_b = b_pixel[2] * brightness_b / 10.0f;
-				float G_b = b_pixel[1] * brightness_b / 10.0f;
-				float B_b = b_pixel[0] * brightness_b / 10.0f;
-
-				// 计算颜色差值
 				float delta_r = R_b - R_f;
 				float delta_g = G_b - G_f;
 				float delta_b = B_b - B_f;
 
-				// 计算alpha通道
+				// chroma
 				float coe_a = 8.0f + 255.0f / 256.0f + (delta_r - delta_b) / 256.0f;
 				float coe_b = 4.0f * delta_r + 8.0f * delta_g + 6.0f * delta_b
 					+ ((delta_r - delta_b) * (R_b + R_f)) / 256.0f
@@ -54,7 +52,7 @@ cv::Mat make_phantom_tank(cv::Mat& front, cv::Mat& back, const bool colorful)
 
 				float A_new = 255.0f + coe_b / (2.0f * coe_a);
 
-				// 处理边界情况
+				// fix border
 				uchar A, R, G, B;
 				if (A_new <= 0) {
 					A = 0;
@@ -73,7 +71,6 @@ cv::Mat make_phantom_tank(cv::Mat& front, cv::Mat& back, const bool colorful)
 					B = cv::saturate_cast<uchar>((255.0f * B_b) / A_new);
 				}
 
-				// 设置输出像素（注意OpenCV的RGBA顺序）
 				phantom_tank.at<cv::Vec4b>(i, j) = cv::Vec4b(B, G, R, A);
 			}
 		}
